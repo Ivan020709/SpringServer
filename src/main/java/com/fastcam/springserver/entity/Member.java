@@ -15,11 +15,13 @@ public class Member {
     private int userid;
     private String pwd;
     private String name;
+    @Column(nullable = false)
+    private String nickname;
     @Column (nullable = false)
     private String email;
     private String phone;
-    @Column(name = "birth")
-    private LocalDate birth;
+    @Column(columnDefinition = "varchar(8)")
+    private String birth;
     @Column (nullable = false , columnDefinition = "varchar(4)")
     private String mbti;
     @Column(length = 500)
@@ -36,4 +38,6 @@ public class Member {
     private String snsid;
     @Column(columnDefinition = "varchar(1) default 'N'")
     private String editcom;
+    @Column(columnDefinition = "default 'USER'")
+    private String role;
 }
