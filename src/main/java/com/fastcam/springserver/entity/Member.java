@@ -21,8 +21,6 @@ public class Member {
     private String phone;
     @Column(columnDefinition = "varchar(8)")
     private String birth;
-    @Column (nullable = false , columnDefinition = "varchar(4)")
-    private String mbti;
     @Column(length = 500)
     private String savefilename;
     private String zip_num;
@@ -37,6 +35,6 @@ public class Member {
     private String snsid;
     @Column(columnDefinition = "varchar(1) default 'N'")
     private String editcom;
-    @Column(columnDefinition = "default 'USER'")
+    @Column(length = 20, columnDefinition = "varchar(20) default 'USER'")
     private String role;
 }
