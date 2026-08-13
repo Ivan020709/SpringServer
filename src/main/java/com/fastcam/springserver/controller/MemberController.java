@@ -106,7 +106,7 @@ public class MemberController {
         String uploadPath = path + "/" + f1 + dt + f2;
         try {
             file.transferTo( new File(uploadPath) );
-            map.put("filename", f1 + dt + f2);
+            map.put("savefilename", f1 + dt + f2);
         } catch (IllegalStateException | IOException e) {
             e.printStackTrace();
         }
