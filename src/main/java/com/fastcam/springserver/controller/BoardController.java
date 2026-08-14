@@ -17,13 +17,13 @@ public class BoardController {
     @GetMapping("/getBoard/{boardnum}")
     public HashMap<String, Object> getBoard(@PathVariable("boardnum") int boardnum){
         HashMap<String, Object> map = new HashMap<>();
-        Board bdto = bs.findByBoardnum(boardnum);
+        Board bdto = bs.getBoard(boardnum);
         map.put("board", bdto);
         return map;
     }
 
-    @GetMapping("/getBoardList")
-    public HashMap<String, Object> getBoardList(@RequestParam("page") int page){
+    @GetMapping("/getBoardList/{page}")
+    public HashMap<String, Object> getBoardList(@PathVariable("page") int page){
         HashMap<String, Object> map = bs.getBoardList(page);
         return map;
     }
@@ -54,6 +54,13 @@ public class BoardController {
         return map;
     }
 
-
+    // 게시글 등록
+    @PostMapping("/insertBoard")
+    public HashMap<String, Object> insertBoard(@RequestBody Board board){
+        HashMap<String, Object>map = new HashMap<>();
+        bs.insertBoard(board);
+        map.put("msg", "OK");
+        return map;
+    }
 
 }

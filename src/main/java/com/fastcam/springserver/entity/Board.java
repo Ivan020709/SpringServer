@@ -25,5 +25,8 @@ public class Board {
     @CreationTimestamp
     @Column(columnDefinition = "datetime default now()")
     private Timestamp indate;
-
+    @Column(nullable = false)
+    private String category;
+    @Column(nullable = false)
+    private boolean isprivate;
 }
