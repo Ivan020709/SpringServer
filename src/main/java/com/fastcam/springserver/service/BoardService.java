@@ -35,10 +35,10 @@ public class BoardService {
         List<Board> list = br.findAll();
         int count = list.size();
 
-        paging.setTotalCount(count);
-        paging.calPaing();
         paging.setDisplayPage(5);
         paging.setDisplayRow(5);
+        paging.setTotalCount(count);
+        paging.calPaing();
 
 
 
@@ -55,22 +55,27 @@ public class BoardService {
         return  result;
     }
 
-    public Board findByBoardnum(int boardnum) {
-        Board board = findByBoardnum(boardnum);
+    public Board getBoard(int boardnum) {
+        Board board = br.findByBoardnum(boardnum);
         return board;
     }
 
     public void deleteBoard(int boardnum) {
-        Board board = findByBoardnum(boardnum);
+        Board board = br.findByBoardnum(boardnum);
         br.delete(board);
     }
 
     public void updateBoard(Board board) {
-        Board oldBoard = findByBoardnum(board.getBoardnum());
+        Board oldBoard = br.findByBoardnum(board.getBoardnum());
 
         oldBoard.setEmail(board.getEmail());
         oldBoard.setTitle(board.getTitle());
         oldBoard.setContent(board.getContent());
 
+    }
+
+    // 게시글 등록
+    public void insertBoard(Board board) {
+        br.save(board);
     }
 }
