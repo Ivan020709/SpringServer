@@ -35,7 +35,7 @@ public class MemberController {
             @RequestParam("pwd") String pwd
     ){
         HashMap<String, Object> map = new HashMap<String, Object>();
-        Member mdto = ms.getMemberByEmail(email);
+        Member mdto = ms.getEmail(email);
 
         if(mdto ==null){
             map.put("msg","notOK" );
@@ -50,12 +50,13 @@ public class MemberController {
         return map;
     }
 
-//    @GetMapping("/getMember")
-//    public HashMap<String, Object>getMember(@RequestParam("email") String email){
-//        HashMap<String, Object> map = new HashMap<>();
-//        ms.getMemberByEmail(email);
-//
-//    }
+    @GetMapping("/getMember")
+    public HashMap<String, Object>getMember(@RequestParam("snsid") String snsid){
+        HashMap<String, Object> map = new HashMap<>();
+        ms.getSnsid(snsid);
+        map.put("msg","OK");
+        return map;
+    }
 
     @PostMapping("/insertMember")
     public HashMap<String, Object>join(@RequestBody Member member){
@@ -69,7 +70,7 @@ public class MemberController {
     @PostMapping("/emailCheck")
     public HashMap<String, Object>emailCheck(@RequestParam ("email") String email){
         HashMap<String, Object>map = new HashMap<>();
-        Member mdto  = ms.getMemberByEmail(email);
+        Member mdto  = ms.getEmail(email);
         if(mdto==null){
             map.put("msg", "OK");
         }else{
@@ -82,7 +83,7 @@ public class MemberController {
     @PostMapping("/nicknameCheck")
     public HashMap<String, Object> nicknamecheck( @RequestParam("nickname") String nickname){
         HashMap<String, Object> map = new HashMap<String, Object>();
-        Member mdto = ms.getMemberByNickname(nickname);
+        Member mdto = ms.getNickname(nickname);
         if( mdto == null )
             map.put("msg", "OK");
         else
@@ -120,20 +121,18 @@ public class MemberController {
     private String redirect_uri;
 
     @GetMapping("/kakaostart")
-    public @ResponseBody  String kakaostart(){
-        String a = "<script type='text/javascript'>"
-                + "location.href='https://kauth.kakao.com/oauth/authorize?"
-                + "client_id=" + client_id + "&"
-                + "redirect_uri=" + redirect_uri + "&"
-                + "response_type=code';" + "</script>";
+    private @ResponseBody String kakaostart(){
+        String a = "<script type='text/javascript'>" +
+                "location.href='https://kauth.kakao.com/oauth/authorize?" +
+                "client_id=" + client_id +
+                "&redirect_uri=" + redirect_uri +
+                "&response_type=code'" + "</script>";
         return a;
     }
 
     @GetMapping("/kakaoLogin")
-    public void kakaoLogin(HttpServletRequest request, HttpServletResponse response  ) throws IOException {
-
+    public void kakaoLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String code = request.getParameter("code");
-
         String endpoint = "https://kauth.kakao.com/oauth/token";
         URL url = new URL(endpoint);
         String bodyData = "grant_type=authorization_code&";
@@ -167,25 +166,33 @@ public class MemberController {
         StringBuilder sb2 = new StringBuilder();
         while ((input2 = br2.readLine()) != null) {
             sb2.append(input2);
-            System.out.println(input2);
+            //System.out.println(input2);
         }
+
         Gson gson2 = new Gson();
         KakaoProfile kakaoProfile = gson2.fromJson(sb2.toString(), KakaoProfile.class);
         KakaoProfile.KakaoAccount ac = kakaoProfile.getAccount();
         KakaoProfile.KakaoAccount.Profile pf = ac.getProfile();
 
         System.out.println("id : " + kakaoProfile.getId());
-        System.out.println("Profile-Nickname : " + pf.getNickname());
+        System.out.println("Profile-Nickname : " + ac.getProfile().getNickname());
+        System.out.println("Profile-pfimg : " + pf.getProfile_image_url());
 
         Member mdto = ms.getMemberBySnsid( kakaoProfile.getId() );
         if( mdto == null){
             mdto = new Member();
-            mdto.setName( pf.getNickname() );
-            mdto.setProvider( "KAKAO" );
-            mdto.setSnsid(kakaoProfile.getId());
+
+            mdto.setEmail( kakaoProfile.getId() );
+            mdto.setSnsid( kakaoProfile.getId() );
+            mdto.setName(ac.getProfile().getNickname());
+            mdto.setNickname( ac.getProfile().getNickname() );
+            mdto.setProvider("KAKAO");
+
             ms.insertMember(mdto);
+            mdto = ms.getMemberBySnsid( kakaoProfile.getId() );
         }
-        response.sendRedirect("http://localhost:3000/savekakaoinfo/" + mdto.getUserid() );
+        response.sendRedirect("http://localhost:3000/savekakaoinfo/" + mdto.getUserid());
+
     }
 
     @PostMapping("/updateMember")
@@ -197,6 +204,52 @@ public class MemberController {
 
     }
 
+    @GetMapping("/getEmail")
+    public HashMap<String, Object> getEmail(@RequestParam("email") String email){
+        HashMap<String, Object>map = new HashMap<>();
+        Member mdto = ms.getEmail(email);
+        if( mdto == null )
+            map.put("msg", "OK");
+        else
+            map.put("msg", "notOK");
+        return map;
+    }
+
+    @PostMapping("/updateKakaoMember")
+    public HashMap<String,Object> updateKakaoMember(@RequestBody Member member){
+        HashMap<String, Object> map = new HashMap<>();
+        ms.updateKakaoMember(member);
+        map.put("msg", "OK");
+        map.put("loginUser", ms.getMemberByUserid( member.getUserid() ));
+        return map;
+    }
+
+    @GetMapping("/getSnsid")
+    public HashMap<String,Object> getSnsid(@RequestParam("snsid") String snsid){
+
+        System.out.println("받은 snsid = " + snsid);
+
+        HashMap<String, Object> map = new HashMap<>();
+        Member mdto = ms.getSnsid(snsid);
+
+        System.out.println("조회 결과 = " + mdto);
+
+        if(mdto == null){
+            map.put("msg", "notOK");
+        }else{
+            map.put("msg", "OK");
+            map.put("loginUser", mdto);
+        }
+
+        return map;
+    }
+
+    @GetMapping("/getLoginUser")
+    public HashMap<String, Object> getLoginUser(@RequestParam("userid") int userid){
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("loginUser", ms.getMemberByUserid(userid) );
+        return map;
+    }
 
 
 }

@@ -17,7 +17,7 @@ public class BoardController {
     @GetMapping("/getBoard/{boardnum}")
     public HashMap<String, Object> getBoard(@PathVariable("boardnum") int boardnum){
         HashMap<String, Object> map = new HashMap<>();
-        Board bdto = bs.findByBoardnum(boardnum);
+        Board bdto = bs.getBoard(boardnum);
         map.put("board", bdto);
         return map;
     }

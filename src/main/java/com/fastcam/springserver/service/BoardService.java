@@ -17,6 +17,7 @@ import java.util.List;
 @Service
 @Transactional
 public class BoardService {
+
     @Autowired
     BoardRepository br;
 
@@ -55,22 +56,23 @@ public class BoardService {
         return  result;
     }
 
-    public Board findByBoardnum(int boardnum) {
-        Board board = findByBoardnum(boardnum);
-        return board;
-    }
 
     public void deleteBoard(int boardnum) {
-        Board board = findByBoardnum(boardnum);
+        Board board = br.findByBoardnum(boardnum);
         br.delete(board);
     }
 
     public void updateBoard(Board board) {
-        Board oldBoard = findByBoardnum(board.getBoardnum());
+        Board oldBoard = br.findByBoardnum(board.getBoardnum());
 
         oldBoard.setEmail(board.getEmail());
         oldBoard.setTitle(board.getTitle());
         oldBoard.setContent(board.getContent());
 
+    }
+
+    public Board getBoard(int boardnum) {
+        Board board = br.findByBoardnum(boardnum);
+        return board;
     }
 }
