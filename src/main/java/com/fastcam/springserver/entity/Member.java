@@ -32,9 +32,6 @@ public class Member {
     @Column(columnDefinition = "varchar(10) default 'LOCAL'")
     private String provider;
     private String snsid;
-
     @Column(columnDefinition = "varchar(1) default 'N'")
     private String editcom = "N";
-    @Column(length = 20, columnDefinition = "varchar(20) default '1'")
-    private String role = "1";
 }
