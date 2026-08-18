@@ -23,9 +23,22 @@ public class BoardController {
     }
 
     @GetMapping("/getBoardList/{page}")
-    public HashMap<String, Object> getBoardList(@PathVariable("page") int page){
-        HashMap<String, Object> map = bs.getBoardList(page);
+    public HashMap<String, Object> getBoardList(@PathVariable("page") int page, @RequestParam(value = "userId", required = false) Integer userId){
+        HashMap<String, Object> map = bs.getBoardList(page, userId);
         return map;
+    }
+
+    @PostMapping("/toggleLike")
+    public HashMap<String, Object> toggleLike(@RequestParam int boardId, @RequestParam int userId) {
+        return bs.toggleLike(boardId, userId);
+    }
+
+    @PostMapping("/reportBoard")
+    public HashMap<String, Object> reportBoard(@RequestBody HashMap<String, Object> request) {
+        int boardId = ((Number) request.get("boardId")).intValue();
+        int reporterId = ((Number) request.get("reporterId")).intValue();
+        bs.reportBoard(boardId, reporterId, (String) request.get("reason"), (String) request.getOrDefault("detail", ""));
+        HashMap<String, Object> result = new HashMap<>(); result.put("msg", "OK"); return result;
     }
 
 
