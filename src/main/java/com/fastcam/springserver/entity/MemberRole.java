@@ -14,5 +14,4 @@ public class MemberRole {
     private int id;
     private String email;
     private String role;
-
 }

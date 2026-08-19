@@ -72,6 +72,5 @@ public class MemberService {
         oldMember.setEditcom("Y");
 
         System.out.println("수정 후 회원 = " + oldMember);
-
     }
 }

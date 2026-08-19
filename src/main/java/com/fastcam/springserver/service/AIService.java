@@ -7,24 +7,19 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 public class AIService {
-
     private final WebClient webClient;
 
-
     public AIService() {
-
         this.webClient = WebClient.builder()
                 .baseUrl("http://localhost:8000")
                 .build();
     }
-
 
     // =====================================================
     // AI 채팅
     // =====================================================
 
     public ResponseDto chat(RequestDto req) {
-
         return webClient.post()
                 .uri("/chat")
                 .bodyValue(req)
@@ -32,7 +27,6 @@ public class AIService {
                 .bodyToMono(ResponseDto.class)
                 .block();
     }
-
 
     // =====================================================
     // 대화 분석
