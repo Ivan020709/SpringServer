@@ -27,5 +27,9 @@ public class EmotionDiaryService {
         return result;
     }
 
-    public EmotionDiary save(EmotionDiary diary) { return repository.save(diary); }
+    public EmotionDiary save(EmotionDiary diary, int userId) {
+        diary.setId(null);
+        diary.setUserId(userId);
+        return repository.save(diary);
+    }
 }

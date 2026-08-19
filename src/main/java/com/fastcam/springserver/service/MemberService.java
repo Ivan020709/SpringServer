@@ -5,6 +5,8 @@ import com.fastcam.springserver.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @Transactional
@@ -19,8 +21,8 @@ public class MemberService {
 
 
 
-    public void updateMember(Member member) {
-        Member oldMember = mr.findByEmail(member.getEmail());
+    public Member updateMember(Member member, int userId) {
+        Member oldMember = requireMember(userId);
 
         oldMember.setPwd(member.getPwd());
         oldMember.setNickname(member.getNickname());
@@ -29,8 +31,7 @@ public class MemberService {
         oldMember.setAddress1(member.getAddress1());
         oldMember.setAddress2(member.getAddress2());
         oldMember.setAddress3(member.getAddress3());
-
-
+        return oldMember;
     }
 
     public Member getEmail(String email) {
@@ -59,8 +60,8 @@ public class MemberService {
         return member;
     }
 
-    public void updateKakaoMember(Member member) {
-        Member oldMember = mr.findByUserid(member.getUserid());
+    public Member updateKakaoMember(Member member, int userId) {
+        Member oldMember = requireMember(userId);
 
         oldMember.setEmail(member.getEmail());
         oldMember.setNickname(member.getNickname());
@@ -72,5 +73,19 @@ public class MemberService {
         oldMember.setEditcom("Y");
 
         System.out.println("수정 후 회원 = " + oldMember);
+        return oldMember;
+    }
+
+    private Member requireMember(int userId) {
+        Member member = mr.findByUserid(userId);
+        if (member == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인 회원을 찾을 수 없습니다.");
+        }
+        return member;
+    }
+
+    public void deleteMember(String email) {
+        Member member = mr.findByEmail(email);
+        mr.delete(member);
     }
 }

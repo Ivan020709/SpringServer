@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface BoardReportRepository extends JpaRepository<BoardReport, Integer> {
     Optional<BoardReport> findByBoardIdAndReporterId(int boardId, int reporterId);
+    void deleteAllByBoardId(int boardId);
 }

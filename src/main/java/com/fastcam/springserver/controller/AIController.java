@@ -6,6 +6,8 @@ import com.fastcam.springserver.service.AIService;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.fastcam.springserver.security.SessionUserResolver;
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/ai")
@@ -16,11 +18,13 @@ import org.springframework.web.bind.annotation.*;
 public class AIController {
 
     private final AIService aiService;
+    private final SessionUserResolver sessionUsers;
 
 
-    public AIController(AIService aiService) {
+    public AIController(AIService aiService, SessionUserResolver sessionUsers) {
 
         this.aiService = aiService;
+        this.sessionUsers = sessionUsers;
     }
 
 
@@ -30,8 +34,11 @@ public class AIController {
 
     @PostMapping("/chat")
     public ResponseEntity<ResponseDto> chat(
-            @RequestBody RequestDto req
+            @RequestBody RequestDto req,
+            HttpSession session
     ) {
+
+        sessionUsers.requireUserId(session);
 
         System.out.println("=================================");
         System.out.println("AI 채팅 요청");
@@ -58,8 +65,11 @@ public class AIController {
 
     @PostMapping("/analyze")
     public ResponseEntity<ResponseDto> analyze(
-            @RequestBody RequestDto req
+            @RequestBody RequestDto req,
+            HttpSession session
     ) {
+
+        sessionUsers.requireUserId(session);
 
         System.out.println("=================================");
         System.out.println("AI 대화 분석 요청");
