@@ -245,4 +245,71 @@ public class MemberController {
         map.put("msg","OK");
         return map;
     }
+
+    @PostMapping("/findId")
+    public HashMap<String, Object> findId(
+            @RequestBody HashMap<String, String> data
+    ) {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+
+        String name = data.get("name");
+        String phone = data.get("phone");
+
+        Member member = ms.findId(name, phone);
+
+        if (member == null) {
+            map.put("msg", "notOK");
+        } else {
+            map.put("msg", "OK");
+
+            // 프론트가 result.data.userid를 사용하고 있어서
+            // userid라는 이름으로 이메일을 보내준다.
+            map.put("userid", member.getEmail());
+        }
+
+        return map;
+    }
+
+    @PostMapping("/findPwd")
+    public HashMap<String, Object> findPwd(
+            @RequestBody HashMap<String, String> data
+    ) {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+
+        // 프론트에서는 이메일을 userid라는 이름으로 보낸다.
+        String email = data.get("userid");
+        String name = data.get("name");
+        String phone = data.get("phone");
+
+        Member member = ms.findPwd(email, name, phone);
+
+        if (member == null) {
+            map.put("msg", "notOK");
+        } else {
+            map.put("msg", "OK");
+            map.put("userid", member.getEmail());
+        }
+
+        return map;
+    }
+
+    @PostMapping("/updatePwd")
+    public HashMap<String, Object> updatePwd(
+            @RequestBody HashMap<String, String> data
+    ) {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+
+        String email = data.get("userid");
+        String password = data.get("password");
+
+        Member member = ms.updatePwd(email, password);
+
+        if (member == null) {
+            map.put("msg", "notOK");
+        } else {
+            map.put("msg", "OK");
+        }
+
+        return map;
+    }
 }

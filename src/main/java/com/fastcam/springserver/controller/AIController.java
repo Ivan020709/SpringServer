@@ -3,6 +3,8 @@ package com.fastcam.springserver.controller;
 import com.fastcam.springserver.dto.RequestDto;
 import com.fastcam.springserver.dto.ResponseDto;
 import com.fastcam.springserver.service.AIService;
+import com.fastcam.springserver.service.EmotionDiaryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +21,9 @@ public class AIController {
     public AIController(AIService aiService) {
         this.aiService = aiService;
     }
+
+    @Autowired
+    EmotionDiaryService eds;
 
 
     // =====================================================
@@ -60,6 +65,7 @@ public class AIController {
 
         System.out.println("=================================");
         System.out.println("AI 대화 분석 요청");
+        System.out.println("사용자 ID : " + req.getUserid());
         System.out.println("세션 ID : " + req.getSession_id());
         System.out.println("캐릭터 : " + req.getCharacter());
         System.out.println(
@@ -71,9 +77,13 @@ public class AIController {
         System.out.println("=================================");
 
 
+        // 1. AI 분석
         ResponseDto response =
                 aiService.analyze(req);
 
+
+        // 2. AI 분석 결과 DB 저장
+        eds.saveFromAiResult(req.getUserid(),response);
 
         System.out.println("===== 분석 결과 =====");
 
@@ -101,4 +111,5 @@ public class AIController {
 
         return ResponseEntity.ok(response);
     }
+
 }

@@ -1,13 +1,12 @@
 package com.fastcam.springserver.dto;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 
 @Data
 public class RequestDto {
+    private int userid;
     private String session_id;
     private String character;
     private String message;

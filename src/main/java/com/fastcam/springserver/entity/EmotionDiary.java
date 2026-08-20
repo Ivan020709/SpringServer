@@ -26,9 +26,6 @@ public class EmotionDiary {
     @Column(nullable = false, length = 30)
     private String mood;
 
-    @Column(nullable = false, length = 200)
-    private String title;
-
     @Column(nullable = false, columnDefinition = "TEXT")
     private String summary;
 
@@ -39,9 +36,9 @@ public class EmotionDiary {
     @Column(name = "created_at", nullable = false)
     private Timestamp createdAt;
 
-    @Column(name = "updated_at")
-    private Timestamp updatedAt;
-
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
+
+    @Column(nullable = false, length = 50)
+    private String emoji;
 }

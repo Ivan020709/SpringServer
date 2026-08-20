@@ -88,4 +88,25 @@ public class MemberService {
         Member member = mr.findByEmail(email);
         mr.delete(member);
     }
+
+    public Member findId(String name, String phone) {
+        Member member = mr.findByNameAndPhone(name, phone);
+        return member;
+    }
+
+    public Member findPwd(String email, String name, String phone) {
+        Member member = mr.findByEmailAndNameAndPhone(email, name, phone);
+        return member;
+    }
+
+    public Member updatePwd(String email, String password) {
+        Member member = mr.findByEmail(email);
+
+        if (member != null) {
+            member.setPwd(password);
+            mr.save(member);
+        }
+
+        return member;
+    }
 }

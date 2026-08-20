@@ -1,30 +1,26 @@
 package com.fastcam.springserver.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class ChatMessages {
+public class AdminReport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    @Column(nullable = false)
-    private String sessionId;
-    @Column(nullable = false)
-    private String Sender;
-    @Column(columnDefinition = "varchar(2000)", nullable = false)
+    private int reportnum;
+    private int boardnum;
+    private String reporter;
+    private String criminal;
+    private String reasontype;
+    @Column(nullable = false, length = 1000)
     private String content;
     @CreationTimestamp
     @Column(columnDefinition = "datetime default now()")
     private Timestamp indate;
+    @Column(columnDefinition = "varchar(1) default 'N'")
+    private String status;
 }
