@@ -41,4 +41,7 @@ public class EmotionDiary {
 
     @Column(name = "updated_at")
     private Timestamp updatedAt;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String content;
 }

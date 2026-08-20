@@ -1,12 +1,12 @@
 package com.fastcam.springserver.dto;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 public class ResponseDto {
     private String session_id;
     private String character;
@@ -15,8 +15,7 @@ public class ResponseDto {
     private Emotion emotion;
     private String diary;
 
-    @Getter
-    @Setter
+    @Data
     public static class Emotion {
         private String main_emotion;
         private List<String> emotions;

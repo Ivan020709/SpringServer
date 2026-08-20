@@ -3,11 +3,12 @@ package com.fastcam.springserver.controller;
 import com.fastcam.springserver.dto.RequestDto;
 import com.fastcam.springserver.dto.ResponseDto;
 import com.fastcam.springserver.service.AIService;
+import com.fastcam.springserver.security.SessionUserResolver;
+
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.fastcam.springserver.security.SessionUserResolver;
-import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/ai")
@@ -20,9 +21,10 @@ public class AIController {
     private final AIService aiService;
     private final SessionUserResolver sessionUsers;
 
-
-    public AIController(AIService aiService, SessionUserResolver sessionUsers) {
-
+    public AIController(
+            AIService aiService,
+            SessionUserResolver sessionUsers
+    ) {
         this.aiService = aiService;
         this.sessionUsers = sessionUsers;
     }
@@ -38,10 +40,13 @@ public class AIController {
             HttpSession session
     ) {
 
-        sessionUsers.requireUserId(session);
+        // 로그인한 사용자 확인
+        int userId = sessionUsers.requireUserId(session);
 
         System.out.println("=================================");
         System.out.println("AI 채팅 요청");
+        System.out.println("사용자 ID : " + userId);
+        System.out.println("세션 ID : " + req.getSession_id());
         System.out.println("캐릭터 : " + req.getCharacter());
         System.out.println("메시지 : " + req.getMessage());
         System.out.println("=================================");
@@ -52,7 +57,6 @@ public class AIController {
 
 
         System.out.println("AI 응답 : " + response.getMessage());
-
 
         return ResponseEntity.ok(response);
     }
@@ -69,15 +73,20 @@ public class AIController {
             HttpSession session
     ) {
 
-        sessionUsers.requireUserId(session);
+        // 로그인한 사용자 확인
+        int userId = sessionUsers.requireUserId(session);
 
         System.out.println("=================================");
         System.out.println("AI 대화 분석 요청");
+        System.out.println("사용자 ID : " + userId);
+        System.out.println("세션 ID : " + req.getSession_id());
         System.out.println("캐릭터 : " + req.getCharacter());
-        System.out.println("대화 수 : " +
-                (req.getHistory() == null
-                        ? 0
-                        : req.getHistory().size()));
+        System.out.println(
+                "대화 수 : " +
+                        (req.getHistory() == null
+                                ? 0
+                                : req.getHistory().size())
+        );
         System.out.println("=================================");
 
 
