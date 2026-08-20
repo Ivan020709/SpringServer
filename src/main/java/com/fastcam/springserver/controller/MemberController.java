@@ -4,12 +4,10 @@ import com.fastcam.springserver.dto.KakaoProfile;
 import com.fastcam.springserver.dto.OAuthToken;
 import com.fastcam.springserver.entity.Member;
 import com.fastcam.springserver.service.MemberService;
-import com.fastcam.springserver.security.SessionUserResolver;
 import com.google.gson.Gson;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -30,15 +28,10 @@ public class MemberController {
     @Autowired
     MemberService ms;
 
-    @Autowired
-    SessionUserResolver sessionUsers;
-
-
     @PostMapping("/login")
     public HashMap<String, Object>login(
             @RequestParam("email") String email,
-            @RequestParam("pwd") String pwd,
-            HttpSession session
+            @RequestParam("pwd") String pwd
     ){
         HashMap<String, Object> map = new HashMap<String, Object>();
         Member mdto = ms.getEmail(email);
@@ -50,18 +43,9 @@ public class MemberController {
             map.put("msg","notOK");
             return map;
         }else{
-            session.setAttribute("loginUserId", mdto.getUserid());
             map.put("msg", "OK");
             map.put("loginUser",mdto);
         }
-        return map;
-    }
-
-    @PostMapping("/logout")
-    public HashMap<String, Object> logout(HttpSession session) {
-        session.invalidate();
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("msg", "OK");
         return map;
     }
 
@@ -146,7 +130,7 @@ public class MemberController {
     }
 
     @GetMapping("/kakaoLogin")
-    public void kakaoLogin(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
+    public void kakaoLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String code = request.getParameter("code");
         String endpoint = "https://kauth.kakao.com/oauth/token";
         URL url = new URL(endpoint);
@@ -206,15 +190,14 @@ public class MemberController {
             ms.insertMember(mdto);
             mdto = ms.getMemberBySnsid( kakaoProfile.getId() );
         }
-        session.setAttribute("loginUserId", mdto.getUserid());
         response.sendRedirect("http://localhost:3000/savekakaoinfo/" + mdto.getUserid());
 
     }
 
     @PostMapping("/updateMember")
-    public HashMap<String, Object> updateMember(@RequestBody Member member, HttpSession session){
+    public HashMap<String, Object> updateMember(@RequestBody Member member){
         HashMap<String, Object> map = new HashMap<>();
-        Member updated = ms.updateMember(member, sessionUsers.requireUserId(session));
+        Member updated = ms.updateMember(member, member.getUserid());
         map.put("updateMember", updated);
         return map;
 
@@ -222,31 +205,36 @@ public class MemberController {
 
     @GetMapping("/getEmail")
     public HashMap<String, Object> getEmail(@RequestParam("email") String email){
-        HashMap<String, Object>map = new HashMap<>();
-        Member mdto = ms.getEmail(email);
-        if( mdto == null )
+
+        HashMap<String, Object> map = new HashMap<>();
+
+        Member member = ms.getEmail(email);
+
+        if (member != null) {
             map.put("msg", "OK");
-        else
+            map.put("member", member);
+        } else {
             map.put("msg", "notOK");
+        }
+
         return map;
     }
 
     @PostMapping("/updateKakaoMember")
-    public HashMap<String,Object> updateKakaoMember(@RequestBody Member member, HttpSession session){
+    public HashMap<String,Object> updateKakaoMember(@RequestBody Member member){
         HashMap<String, Object> map = new HashMap<>();
-        int userId = sessionUsers.requireUserId(session);
+        int userId = member.getUserid();
         ms.updateKakaoMember(member, userId);
         map.put("msg", "OK");
         Member loginUser = ms.getMemberByUserid(userId);
-        session.setAttribute("loginUserId", loginUser.getUserid());
         map.put("loginUser", loginUser);
         return map;
     }
 
     @GetMapping("/getLoginUser")
-    public HashMap<String, Object> getLoginUser(HttpSession session){
+    public HashMap<String, Object> getLoginUser(@RequestParam("userid") int userid){
         HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("loginUser", ms.getMemberByUserid(sessionUsers.requireUserId(session)) );
+        map.put("loginUser", ms.getMemberByUserid(userid) );
         return map;
     }
 

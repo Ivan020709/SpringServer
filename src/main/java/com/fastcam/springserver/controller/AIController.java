@@ -3,10 +3,6 @@ package com.fastcam.springserver.controller;
 import com.fastcam.springserver.dto.RequestDto;
 import com.fastcam.springserver.dto.ResponseDto;
 import com.fastcam.springserver.service.AIService;
-import com.fastcam.springserver.security.SessionUserResolver;
-
-import jakarta.servlet.http.HttpSession;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,14 +15,9 @@ import org.springframework.web.bind.annotation.*;
 public class AIController {
 
     private final AIService aiService;
-    private final SessionUserResolver sessionUsers;
 
-    public AIController(
-            AIService aiService,
-            SessionUserResolver sessionUsers
-    ) {
+    public AIController(AIService aiService) {
         this.aiService = aiService;
-        this.sessionUsers = sessionUsers;
     }
 
 
@@ -36,16 +27,11 @@ public class AIController {
 
     @PostMapping("/chat")
     public ResponseEntity<ResponseDto> chat(
-            @RequestBody RequestDto req,
-            HttpSession session
+            @RequestBody RequestDto req
     ) {
-
-        // 로그인한 사용자 확인
-        int userId = sessionUsers.requireUserId(session);
 
         System.out.println("=================================");
         System.out.println("AI 채팅 요청");
-        System.out.println("사용자 ID : " + userId);
         System.out.println("세션 ID : " + req.getSession_id());
         System.out.println("캐릭터 : " + req.getCharacter());
         System.out.println("메시지 : " + req.getMessage());
@@ -69,16 +55,11 @@ public class AIController {
 
     @PostMapping("/analyze")
     public ResponseEntity<ResponseDto> analyze(
-            @RequestBody RequestDto req,
-            HttpSession session
+            @RequestBody RequestDto req
     ) {
-
-        // 로그인한 사용자 확인
-        int userId = sessionUsers.requireUserId(session);
 
         System.out.println("=================================");
         System.out.println("AI 대화 분석 요청");
-        System.out.println("사용자 ID : " + userId);
         System.out.println("세션 ID : " + req.getSession_id());
         System.out.println("캐릭터 : " + req.getCharacter());
         System.out.println(

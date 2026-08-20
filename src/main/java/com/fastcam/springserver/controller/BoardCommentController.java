@@ -2,9 +2,7 @@ package com.fastcam.springserver.controller;
 
 import com.fastcam.springserver.dto.BoardCommentRequest;
 import com.fastcam.springserver.entity.BoardComment;
-import com.fastcam.springserver.security.SessionUserResolver;
 import com.fastcam.springserver.service.BoardCommentService;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,34 +12,33 @@ import java.util.Map;
 @RequestMapping("/board")
 public class BoardCommentController {
     private final BoardCommentService service;
-    private final SessionUserResolver sessionUsers;
 
-    public BoardCommentController(BoardCommentService service, SessionUserResolver sessionUsers) {
+    public BoardCommentController(BoardCommentService service) {
         this.service = service;
-        this.sessionUsers = sessionUsers;
     }
 
     @GetMapping("/{boardId}/comments")
-    public Map<String, Object> list(@PathVariable int boardId, HttpSession session) {
-        List<BoardComment> comments = service.list(boardId, sessionUsers.optionalUserId(session));
+    public Map<String, Object> list(@PathVariable int boardId,
+                                    @RequestParam(required = false) Integer userId) {
+        List<BoardComment> comments = service.list(boardId, userId);
         return Map.of("comments", comments, "count", comments.size());
     }
 
     @PostMapping("/{boardId}/comments")
-    public Map<String, Object> create(@PathVariable int boardId, @RequestBody BoardCommentRequest request,
-                                      HttpSession session) {
-        return Map.of("comment", service.create(boardId, sessionUsers.requireUserId(session), request.getContent()));
+    public Map<String, Object> create(@PathVariable int boardId, @RequestParam int userId,
+                                      @RequestBody BoardCommentRequest request) {
+        return Map.of("comment", service.create(boardId, userId, request.getContent()));
     }
 
     @PutMapping("/comments/{commentId}")
-    public Map<String, Object> update(@PathVariable int commentId, @RequestBody BoardCommentRequest request,
-                                      HttpSession session) {
-        return Map.of("comment", service.update(commentId, sessionUsers.requireUserId(session), request.getContent()));
+    public Map<String, Object> update(@PathVariable int commentId, @RequestParam int userId,
+                                      @RequestBody BoardCommentRequest request) {
+        return Map.of("comment", service.update(commentId, userId, request.getContent()));
     }
 
     @DeleteMapping("/comments/{commentId}")
-    public Map<String, Object> delete(@PathVariable int commentId, HttpSession session) {
-        service.delete(commentId, sessionUsers.requireUserId(session));
+    public Map<String, Object> delete(@PathVariable int commentId, @RequestParam int userId) {
+        service.delete(commentId, userId);
         return Map.of("msg", "OK");
     }
 }
