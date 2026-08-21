@@ -57,8 +57,6 @@ public class AdminService {
         paging.setDisplayPage(10);
         paging.setDisplayRow(10);
 
-
-
         Pageable pageable = PageRequest.of(page-1, paging.getDisplayRow(),
                 Sort.by(Sort.Direction.DESC, "reportnum"));
 
@@ -69,6 +67,5 @@ public class AdminService {
         result.put("paging", paging);
 
         return  result;
-
     }
 }

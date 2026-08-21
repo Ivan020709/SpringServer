@@ -49,5 +49,6 @@ public class KakaoProfile {
 				this.profile_image_url = profile_image_url;
 			}
 		}
+
 	}
 }

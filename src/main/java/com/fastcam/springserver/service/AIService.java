@@ -41,5 +41,7 @@ public class AIService {
                 .retrieve()
                 .bodyToMono(ResponseDto.class)
                 .block();
+
     }
+
 }

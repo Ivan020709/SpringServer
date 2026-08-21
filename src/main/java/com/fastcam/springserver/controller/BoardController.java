@@ -73,4 +73,5 @@ public class BoardController {
     public Map<String, Object> insertBoard(@RequestBody Board board) {
         return Map.of("msg", "OK", "board", boards.insertBoard(board, board.getUserid()));
     }
+
 }

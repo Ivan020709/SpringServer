@@ -25,4 +25,5 @@ public class EmotionDiaryController {
         result.put("diary", service.save(diary, diary.getUserId()));
         return result;
     }
+
 }
