@@ -1,0 +1,22 @@
+package com.fastcam.springserver.entity;
+
+import jakarta.persistence.*;
+import lombok.Data;
+
+import java.time.LocalDateTime;
+
+@Data
+@Entity
+public class AdminError {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int errornum;
+    private LocalDateTime time;
+    private String type;
+    private String level;
+    private String method;
+    private String api;
+    @Column(columnDefinition = "TEXT")
+    private String msg;
+    private int statusCode;
+}

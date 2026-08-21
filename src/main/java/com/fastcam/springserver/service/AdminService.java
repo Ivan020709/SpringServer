@@ -34,7 +34,6 @@ public class AdminService {
 
     public void getReport(AdminReport areport) {
         Board board = br.findByBoardnum(areport.getBoardnum());
-        areport.setStatus("N");
         Member member = mr.findByUserid(board.getUserid());
         if(member==null){
             areport.setCriminal("탈퇴한 회원");
@@ -67,5 +66,10 @@ public class AdminService {
         result.put("paging", paging);
 
         return  result;
+    }
+
+    public void deleteReport(int reportnum) {
+        AdminReport areport = ar.findByReportnum(reportnum);
+        ar.delete(areport);
     }
 }

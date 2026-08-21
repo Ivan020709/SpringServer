@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 
 @Service
 @Transactional
@@ -33,12 +34,19 @@ public class EmotionDiaryService {
 
     @Transactional(readOnly = true)
     public HashMap<String, Object> getMine(int userId) {
+
         HashMap<String, Object> result = new HashMap<>();
 
-        result.put(
-                "diaries",
-                repository.findByUserIdOrderByDiaryDateDesc(userId)
-        );
+        List<EmotionDiary> diaryList =
+                repository.findByUserIdOrderByDiaryDateDesc(userId);
+
+        result.put("msg", "OK");
+
+        // 다른 감정일기 화면에서 사용 중인 이름
+        result.put("diaries", diaryList);
+
+        // 현재 Diary.js가 확인하는 이름
+        result.put("data", diaryList);
 
         return result;
     }
