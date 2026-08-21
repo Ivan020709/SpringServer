@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
+import java.sql.Date;
 
 @Service
 @Transactional
@@ -51,6 +52,27 @@ public class EmotionDiaryService {
         return result;
     }
 
+    @Transactional(readOnly = true)
+    public HashMap<String, Object> getCalendar(
+            int userId,
+            String startDate,
+            String endDate
+    ) {
+        HashMap<String, Object> result = new HashMap<>();
+
+        List<EmotionDiary> diaryList =
+                repository.findByUserIdAndDiaryDateBetweenOrderByDiaryDateAsc(
+                        userId,
+                        Date.valueOf(startDate),
+                        Date.valueOf(endDate)
+                );
+
+        result.put("msg", "OK");
+        result.put("diaries", diaryList);
+
+        return result;
+    }
+
     public EmotionDiary save(EmotionDiary diary, int userId) {
         diary.setId(null);
         diary.setUserId(userId);
@@ -71,7 +93,7 @@ public class EmotionDiaryService {
         diary.setUserId(userid);
         // 일기 날짜
         diary.setDiaryDate(
-                new java.sql.Date(System.currentTimeMillis())
+                new Date(System.currentTimeMillis())
         );
         // 감정
         if (response.getEmotion() != null) {

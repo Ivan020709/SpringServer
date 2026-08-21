@@ -19,6 +19,19 @@ public class EmotionDiaryController {
         return service.getMine(userId);
     }
 
+    @GetMapping("/calendar/{userId}")
+    public HashMap<String, Object> calendar(
+            @PathVariable int userId,
+            @RequestParam("startDate") String startDate,
+            @RequestParam("endDate") String endDate
+    ) {
+        return service.getCalendar(
+                userId,
+                startDate,
+                endDate
+        );
+    }
+
     @PostMapping
     public HashMap<String, Object> create(@RequestBody EmotionDiary diary) {
         HashMap<String, Object> result = new HashMap<>();
