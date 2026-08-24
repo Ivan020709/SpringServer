@@ -87,4 +87,27 @@ public class NoticeBoardService {
         // 새 공지 등록
         nbr.save(nboard);
     }
+
+    public NoticeBoard getNotice(int noticenum) {
+
+        NoticeBoard notice =
+                nbr.findByNoticenum(noticenum);
+
+        return notice;
+    }
+
+    public void plusCount(int noticenum) {
+
+        NoticeBoard notice =
+                nbr.findByNoticenum(noticenum);
+
+        if (notice != null) {
+
+            notice.setViewcount(
+                    notice.getViewcount() + 1
+            );
+
+            nbr.save(notice);
+        }
+    }
 }

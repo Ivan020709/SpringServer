@@ -23,4 +23,10 @@ public interface EmotionDiaryRepository extends JpaRepository<EmotionDiary, Inte
             Date startDate,
             Date endDate
     );
+
+    // 본인이 작성한 감정일기인지 확인하면서 조회
+    EmotionDiary findByIdAndUserId(
+            int id,
+            int userId
+    );
 }

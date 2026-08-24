@@ -32,6 +32,19 @@ public class EmotionDiaryController {
         );
     }
 
+    @PutMapping("/{diaryId}/share")
+    public HashMap<String, Object> updateShare(
+            @PathVariable int diaryId,
+            @RequestParam("userId") int userId,
+            @RequestParam("shared") boolean shared
+    ) {
+        return service.updateShare(
+                diaryId,
+                userId,
+                shared
+        );
+    }
+
     @PostMapping
     public HashMap<String, Object> create(@RequestBody EmotionDiary diary) {
         HashMap<String, Object> result = new HashMap<>();

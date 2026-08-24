@@ -31,4 +31,37 @@ public class NoticeBoardController {
         return map;
     }
 
+    @GetMapping("/getNotice/{noticenum}")
+    public HashMap<String, Object> getNotice(
+            @PathVariable int noticenum
+    ) {
+        HashMap<String, Object> map =
+                new HashMap<>();
+
+        NoticeBoard notice =
+                nbs.getNotice(noticenum);
+
+        if (notice == null) {
+            map.put("msg", "FAIL");
+        } else {
+            map.put("msg", "OK");
+            map.put("notice", notice);
+        }
+
+        return map;
+    }
+
+    @PostMapping("/plusCount")
+    public HashMap<String, Object> plusCount(
+            @RequestParam("boardnum") int boardnum
+    ) {
+        HashMap<String, Object> map =
+                new HashMap<>();
+
+        nbs.plusCount(boardnum);
+
+        map.put("msg", "OK");
+
+        return map;
+    }
 }

@@ -18,4 +18,7 @@ public interface NoticeBoardRepository extends JpaRepository<NoticeBoard, Intege
     List<NoticeBoard> findByTitleContaining(String key);
 
     List<NoticeBoard> findByFixedOrderByIndateAsc(String y);
+
+    // 공지사항 번호로 한 건 조회
+    NoticeBoard findByNoticenum(int noticenum);
 }

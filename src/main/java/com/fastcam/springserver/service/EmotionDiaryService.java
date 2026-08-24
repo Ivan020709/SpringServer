@@ -80,6 +80,35 @@ public class EmotionDiaryService {
         return repository.save(diary);
     }
 
+    public HashMap<String, Object> updateShare(
+            int diaryId,
+            int userId,
+            boolean shared
+    ) {
+        HashMap<String, Object> result = new HashMap<>();
+
+        EmotionDiary diary =
+                repository.findByIdAndUserId(
+                        diaryId,
+                        userId
+                );
+
+        if (diary == null) {
+            result.put("msg", "FAIL");
+            return result;
+        }
+
+        diary.setShared(shared);
+
+        EmotionDiary savedDiary =
+                repository.save(diary);
+
+        result.put("msg", "OK");
+        result.put("diary", savedDiary);
+
+        return result;
+    }
+
 
     // =====================================================
     // AI 분석 결과 → 감정일기 DB 저장
