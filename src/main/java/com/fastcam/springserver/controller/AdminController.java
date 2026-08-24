@@ -95,5 +95,28 @@ public class AdminController {
         return map;
     }
 
+    @PostMapping("/addRole")
+    public HashMap<String,Object> addRole(
+            @RequestParam("userid") int userid,
+            @RequestParam("code") String code
+    ) {
+
+        System.out.println("===== addRole 호출 =====");
+        System.out.println("userid : " + userid);
+        System.out.println("code : " + code);
+
+        HashMap<String, Object> map = new HashMap<>();
+
+        boolean result = as.checkAdminCode(userid, code);
+
+        if (result) {
+            map.put("msg", "OK");
+        } else {
+            map.put("msg", "FAIL");
+        }
+
+        return map;
+    }
+
 
 }

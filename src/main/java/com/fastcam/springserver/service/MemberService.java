@@ -1,7 +1,9 @@
 package com.fastcam.springserver.service;
 
 import com.fastcam.springserver.entity.Member;
+import com.fastcam.springserver.entity.MemberRole;
 import com.fastcam.springserver.repository.MemberRepository;
+import com.fastcam.springserver.repository.MemberRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,8 +17,20 @@ public class MemberService {
     @Autowired
     MemberRepository mr;
 
+    @Autowired
+    MemberRoleRepository mrr;
+
     public void insertMember(Member member) {
         mr.save(member);
+        Member mainmember = mr.findByEmail(member.getEmail());
+
+        MemberRole memberrole = new MemberRole();
+        memberrole.setEmail(mainmember.getEmail());
+        memberrole.setRole("USER");
+
+        mrr.save(memberrole);
+
+
     }
 
 

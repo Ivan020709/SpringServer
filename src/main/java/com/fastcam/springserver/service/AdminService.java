@@ -33,6 +33,9 @@ public class AdminService {
     @Autowired
     AdminErrorRepository aer;
 
+    @Autowired
+    MemberRoleRepository mrr;
+
     public void getReport(AdminReport areport) {
         Board board = br.findByBoardnum(areport.getBoardnum());
         Member member = mr.findByUserid(board.getUserid());
@@ -103,5 +106,65 @@ public class AdminService {
         aerror.setState("Y");
         return aerror;
 
+    }
+
+    public boolean checkAdminCode(int userid, String code) {
+
+        System.out.println("===== checkAdminCode 시작 =====");
+        System.out.println("userid : " + userid);
+        System.out.println("입력 code : [" + code + "]");
+
+        // 관리자 코드 확인
+        if (!"GJ8S-WTJ3-MRW6-FKSL".equals(code)) {
+
+            System.out.println("❌ 관리자 코드 불일치");
+
+            return false;
+        }
+
+        System.out.println("✅ 관리자 코드 일치");
+
+
+        // 회원 조회
+        Member member = mr.findByUserid(userid);
+
+        System.out.println("회원 조회 결과 : " + member);
+
+        if (member == null) {
+
+            System.out.println("❌ 회원을 찾을 수 없음");
+
+            return false;
+        }
+
+        System.out.println("회원 이메일 : " + member.getEmail());
+
+
+        // 회원의 역할 조회
+        MemberRole memberRole = mrr.findByEmail(member.getEmail());
+
+        System.out.println("MemberRole 조회 결과 : " + memberRole);
+
+
+        // 역할 정보가 없으면 새로 생성
+        if (memberRole == null) {
+
+            memberRole = new MemberRole();
+
+            memberRole.setEmail(member.getEmail());
+
+            System.out.println("MemberRole 신규 생성");
+
+        }
+
+
+        // 관리자 권한 부여
+        memberRole.setRole("ADMIN");
+
+        mrr.save(memberRole);
+
+        System.out.println("✅ 관리자 권한 부여 완료");
+
+        return true;
     }
 }
