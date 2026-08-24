@@ -44,6 +44,7 @@ public class GlobalExceptionHandler {
         );
 
         error.setStatusCode(500);
+        error.setState("N");
 
         aes.saveError(error);
     }

@@ -1,5 +1,6 @@
 package com.fastcam.springserver.controller;
 
+import com.fastcam.springserver.entity.AdminActivityLog;
 import com.fastcam.springserver.entity.AdminError;
 import com.fastcam.springserver.entity.AdminReport;
 import com.fastcam.springserver.service.AdminErrorService;
@@ -39,10 +40,12 @@ public class AdminController {
 
     @DeleteMapping("/deleteReport")
     public HashMap<String, Object> deleteReport(
-            @RequestParam("reportnum") int reportnum
+            @RequestParam("reportnum") int reportnum,
+            @RequestParam("adminid") String adminid,
+            @RequestParam("adminname") String adminname
     ){
         HashMap<String, Object> map = new HashMap<>();
-        as.deleteReport(reportnum);
+        as.deleteReport(reportnum, adminid, adminname);
         map.put("msg", "OK");
         return map;
     }
@@ -74,6 +77,23 @@ public class AdminController {
 
     }
 
+    @GetMapping("/getAdminActivityLog")
+    public List<AdminActivityLog> getAdminActivityLog() {
+
+        List<AdminActivityLog> list = as.getAdminActivityLog();
+
+        System.out.println("Controller 반환 데이터 : " + list);
+
+        return list;
+    }
+
+    @GetMapping("/CheckError")
+    public HashMap<String,Object>CheckError(@RequestParam("errornum") int errornum){
+        HashMap<String, Object> map = new HashMap<>();
+        as.checkerror(errornum);
+        map.put("msg","OK");
+        return map;
+    }
 
 
 }

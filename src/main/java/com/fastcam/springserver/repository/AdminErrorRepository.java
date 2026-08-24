@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface AdminErrorRepository extends JpaRepository<AdminError, Integer> {
     List<AdminError> findAllByOrderByErrornumDesc();
+
+    AdminError findByErrornum(int errornum);
 }

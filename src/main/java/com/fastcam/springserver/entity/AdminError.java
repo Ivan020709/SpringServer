@@ -19,4 +19,6 @@ public class AdminError {
     @Column(columnDefinition = "TEXT")
     private String msg;
     private int statusCode;
+    @Column(columnDefinition = "varchar(1) default 'N'")
+    private String state;
 }

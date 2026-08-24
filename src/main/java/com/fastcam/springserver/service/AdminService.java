@@ -1,13 +1,8 @@
 package com.fastcam.springserver.service;
 
 import com.fastcam.springserver.dto.Paging;
-import com.fastcam.springserver.entity.AdminReport;
-import com.fastcam.springserver.entity.Board;
-import com.fastcam.springserver.entity.Member;
-import com.fastcam.springserver.entity.NoticeBoard;
-import com.fastcam.springserver.repository.AdminRepository;
-import com.fastcam.springserver.repository.BoardRepository;
-import com.fastcam.springserver.repository.MemberRepository;
+import com.fastcam.springserver.entity.*;
+import com.fastcam.springserver.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,6 +26,12 @@ public class AdminService {
 
     @Autowired
     MemberRepository mr;
+
+    @Autowired
+    AdminActivityLogRepository aalr;
+
+    @Autowired
+    AdminErrorRepository aer;
 
     public void getReport(AdminReport areport) {
         Board board = br.findByBoardnum(areport.getBoardnum());
@@ -68,8 +69,39 @@ public class AdminService {
         return  result;
     }
 
-    public void deleteReport(int reportnum) {
+    public void deleteReport(int reportnum, String adminid, String adminname) {
         AdminReport areport = ar.findByReportnum(reportnum);
         ar.delete(areport);
+
+        AdminActivityLog log = new AdminActivityLog();
+
+        log.setAdminid(adminid);
+        log.setAdminname(adminname);
+        log.setActivity("게시글 삭제");
+        log.setTarget("게시글 #" + reportnum);
+        log.setMethod("DELETE");
+        log.setApi("/api/admin/deleteReport");
+        log.setResult("SUCCESS");
+
+        aalr.save(log);
+    }
+
+    public List<AdminActivityLog> getAdminActivityLog() {
+
+        System.out.println("===== 활동 로그 조회 시작 =====");
+
+        List<AdminActivityLog> list =
+                aalr.findAll(Sort.by(Sort.Direction.DESC, "indate"));
+
+        System.out.println("조회된 로그 개수 : " + list.size());
+
+        return list;
+    }
+
+    public AdminError checkerror(int errornum) {
+        AdminError aerror = aer.findByErrornum(errornum);
+        aerror.setState("Y");
+        return aerror;
+
     }
 }
