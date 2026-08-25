@@ -30,4 +30,13 @@ public class Inquiry {
     @CreationTimestamp
     @Column(columnDefinition = "datetime default now()")
     private Timestamp indate;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(
+            name = "userid",
+            referencedColumnName = "userid",
+            insertable = false,
+            updatable = false
+    )
+    private Member member;
 }

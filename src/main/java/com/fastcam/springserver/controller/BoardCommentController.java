@@ -1,11 +1,10 @@
 package com.fastcam.springserver.controller;
 
 import com.fastcam.springserver.dto.BoardCommentRequest;
-import com.fastcam.springserver.entity.BoardComment;
 import com.fastcam.springserver.service.BoardCommentService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -20,7 +19,7 @@ public class BoardCommentController {
     @GetMapping("/{boardId}/comments")
     public Map<String, Object> list(@PathVariable int boardId,
                                     @RequestParam(required = false) Integer userId) {
-        List<BoardComment> comments = service.list(boardId, userId);
+        java.util.List<HashMap<String, Object>> comments = service.list(boardId, userId);
         return Map.of("comments", comments, "count", comments.size());
     }
 
@@ -30,7 +29,8 @@ public class BoardCommentController {
         return Map.of("comment", service.create(boardId, userId, request.getContent()));
     }
 
-    @PutMapping("/comments/{commentId}")
+    // PUT 대신 POST로 댓글을 수정합니다.
+    @PostMapping("/comments/{commentId}/update")
     public Map<String, Object> update(@PathVariable int commentId, @RequestParam int userId,
                                       @RequestBody BoardCommentRequest request) {
         return Map.of("comment", service.update(commentId, userId, request.getContent()));

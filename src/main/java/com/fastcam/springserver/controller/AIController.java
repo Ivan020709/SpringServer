@@ -2,6 +2,7 @@ package com.fastcam.springserver.controller;
 
 import com.fastcam.springserver.dto.RequestDto;
 import com.fastcam.springserver.dto.ResponseDto;
+import com.fastcam.springserver.entity.EmotionDiary;
 import com.fastcam.springserver.service.AIService;
 import com.fastcam.springserver.service.EmotionDiaryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,8 +83,16 @@ public class AIController {
                 aiService.analyze(req);
 
 
-        // 2. AI 분석 결과 DB 저장
-        eds.saveFromAiResult(req.getUserid(),response);
+        // 2. AI 분석 결과를 감정일기로 저장합니다.
+        // 저장된 객체를 받아야 새로 만들어진 일기 번호를 확인할 수 있습니다.
+        EmotionDiary savedDiary =
+                eds.saveFromAiResult(
+                        req.getUserid(),
+                        response
+                );
+
+        // 3. Feel.js가 공유 요청에 사용할 수 있도록 일기 번호를 응답에 넣습니다.
+        response.setDiaryId(savedDiary.getId());
 
         System.out.println("===== 분석 결과 =====");
 

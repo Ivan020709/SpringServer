@@ -92,7 +92,9 @@ public class BoardService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "비공개 게시글입니다.");
         }
         HashMap<String, Object> result = new HashMap<>();
-        result.put("board", board);
+        // 게시글 원본만 보내면 프론트에는 userid만 표시됩니다.
+        // 회원 이름과 댓글 수 등이 들어 있는 형태로 바꿔서 전달합니다.
+        result.put("board", toListItem(board, userId));
         result.put("likeCount", likes.countByBoardId(boardnum));
         result.put("commentCount", comments.countByBoardId(boardnum));
         result.put("likedByMe", userId != null && likes.findByBoardIdAndUserId(boardnum, userId).isPresent());
@@ -179,6 +181,13 @@ public class BoardService {
         boolean hidden = board.isIsprivate() && (userId == null || board.getUserid() != userId);
         item.put("boardnum", board.getBoardnum());
         item.put("userid", board.getUserid());
+
+        // 게시글 작성자의 회원 정보를 찾아 실제 이름을 함께 보냅니다.
+        Member writer = members.findByUserid(board.getUserid());
+        item.put(
+                "writerName",
+                writer != null ? writer.getName() : "알 수 없음"
+        );
         item.put("email", hidden ? "" : board.getEmail());
         item.put("title", hidden ? "비공개 게시글입니다." : board.getTitle());
         item.put("content", hidden ? "" : board.getContent());

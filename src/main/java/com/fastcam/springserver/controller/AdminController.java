@@ -117,6 +117,11 @@ public class AdminController {
 
         return map;
     }
+    @GetMapping("/getAdmin")
+    public HashMap<String, Object> getAdmin(@RequestParam("email") String email) {
+
+        return as.getAdmin(email);
+    }
 
 
 }

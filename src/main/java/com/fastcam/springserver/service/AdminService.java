@@ -107,7 +107,6 @@ public class AdminService {
         return aerror;
 
     }
-
     public boolean checkAdminCode(int userid, String code) {
 
         System.out.println("===== checkAdminCode 시작 =====");
@@ -166,5 +165,19 @@ public class AdminService {
         System.out.println("✅ 관리자 권한 부여 완료");
 
         return true;
+    }
+
+
+    public HashMap<String, Object> getAdmin(String email) {
+
+        HashMap<String, Object> map = new HashMap<>();
+        MemberRole memberRole = mrr.findByEmail(email);
+        if (memberRole != null) {
+            map.put("role", memberRole.getRole());
+        } else {
+            map.put("role", "USER");
+        }
+
+        return map;
     }
 }

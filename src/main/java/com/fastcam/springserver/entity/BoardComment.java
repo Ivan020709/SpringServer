@@ -29,4 +29,14 @@ public class BoardComment {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Timestamp createdAt;
+
+    // 댓글 작성자 회원 정보
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(
+            name = "user_id",
+            referencedColumnName = "userid",
+            insertable = false,
+            updatable = false
+    )
+    private Member member;
 }

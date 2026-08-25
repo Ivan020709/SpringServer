@@ -35,18 +35,7 @@ public class MemberService {
 
 
 
-    public Member updateMember(Member member, int userId) {
-        Member oldMember = requireMember(userId);
-
-        oldMember.setPwd(member.getPwd());
-        oldMember.setNickname(member.getNickname());
-        oldMember.setPhone(member.getPhone());
-        oldMember.setZip_num(member.getZip_num());
-        oldMember.setAddress1(member.getAddress1());
-        oldMember.setAddress2(member.getAddress2());
-        oldMember.setAddress3(member.getAddress3());
-        return oldMember;
-    }
+    
 
     public Member getEmail(String email) {
         return mr.findByEmail(email);
@@ -122,5 +111,17 @@ public class MemberService {
         }
 
         return member;
+    }
+
+    public void updateMember(Member member) {
+        Member oldMember = mr.findByEmail(member.getEmail());
+
+        oldMember.setPwd(member.getPwd());
+        oldMember.setNickname(member.getNickname());
+        oldMember.setPhone(member.getPhone());
+        oldMember.setZip_num(member.getZip_num());
+        oldMember.setAddress1(member.getAddress1());
+        oldMember.setAddress2(member.getAddress2());
+        oldMember.setAddress3(member.getAddress3());
     }
 }

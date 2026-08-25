@@ -195,10 +195,10 @@ public class MemberController {
     }
 
     @PostMapping("/updateMember")
-    public HashMap<String, Object> updateMember(@RequestBody Member member){
+    public HashMap<String, Object> updateMember(@RequestBody Member member ){
         HashMap<String, Object> map = new HashMap<>();
-        Member updated = ms.updateMember(member, member.getUserid());
-        map.put("updateMember", updated);
+        ms.updateMember(member);
+        map.put("updateMember", member);
         return map;
 
     }

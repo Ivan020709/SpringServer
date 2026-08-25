@@ -32,7 +32,8 @@ public class EmotionDiaryController {
         );
     }
 
-    @PutMapping("/{diaryId}/share")
+    // PUT을 사용하지 않고 배운 방식인 POST로 공유 상태를 변경합니다.
+    @PostMapping("/{diaryId}/share")
     public HashMap<String, Object> updateShare(
             @PathVariable int diaryId,
             @RequestParam("userId") int userId,
