@@ -28,26 +28,26 @@ public class MemberController {
     @Autowired
     MemberService ms;
 
-    @PostMapping("/login")
-    public HashMap<String, Object>login(
-            @RequestParam("email") String email,
-            @RequestParam("pwd") String pwd
-    ){
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        Member mdto = ms.getEmail(email);
-
-        if(mdto ==null){
-            map.put("msg","notOK" );
-            return map;
-        } else if(!mdto.getPwd().equals(pwd)){
-            map.put("msg","notOK");
-            return map;
-        }else{
-            map.put("msg", "OK");
-            map.put("loginUser",mdto);
-        }
-        return map;
-    }
+//    @PostMapping("/login")
+//    public HashMap<String, Object>login(
+//            @RequestParam("email") String email,
+//            @RequestParam("pwd") String pwd
+//    ){
+//        HashMap<String, Object> map = new HashMap<String, Object>();
+//        Member mdto = ms.getEmail(email);
+//
+//        if(mdto ==null){
+//            map.put("msg","notOK" );
+//            return map;
+//        } else if(!mdto.getPwd().equals(pwd)){
+//            map.put("msg","notOK");
+//            return map;
+//        }else{
+//            map.put("msg", "OK");
+//            map.put("loginUser",mdto);
+//        }
+//        return map;
+//    }
 
     @GetMapping("/getMember")
     public HashMap<String, Object>getMember(@RequestParam("snsid") String snsid){
