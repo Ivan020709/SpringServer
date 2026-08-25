@@ -36,6 +36,12 @@ public class AdminService {
     @Autowired
     MemberRoleRepository mrr;
 
+    @Autowired
+    InquiryRepository ir;
+
+    @Autowired
+    InquiryCommentRepository icr;
+
     public void getReport(AdminReport areport) {
         Board board = br.findByBoardnum(areport.getBoardnum());
         Member member = mr.findByUserid(board.getUserid());
@@ -180,4 +186,22 @@ public class AdminService {
 
         return map;
     }
+
+    public void insertAnswer(int inquirynum, String nickname, String content) {
+        Inquiry inquiry  = ir.findByInquirynum(inquirynum);
+
+        InquiryComment ic = new InquiryComment();
+
+        ic.setInquiryId(inquiry.getInquirynum());
+        ic.setNickname(nickname);
+        ic.setContent(content);
+        icr.save(ic);
+        inquiry.setStatus("답변완료");
+        ir.save(inquiry);
+    }
+
+    public InquiryComment getAdminAnswer(int inquiryId) {
+        return icr.findByInquiryId(inquiryId);
+    }
+
 }

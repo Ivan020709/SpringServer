@@ -13,4 +13,6 @@ public interface InquiryCommentRepository
 
     // 문의글을 삭제하기 전에 연결된 댓글을 모두 삭제합니다.
     void deleteAllByInquiryId(int inquiryId);
+
+    InquiryComment findByInquiryId(int inquiryId);
 }

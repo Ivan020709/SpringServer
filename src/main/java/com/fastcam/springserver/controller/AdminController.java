@@ -123,5 +123,25 @@ public class AdminController {
         return as.getAdmin(email);
     }
 
+    @PostMapping("/writeAnswer")
+    public HashMap<String, Object> writeAnswer(
+            @RequestParam("inquirynum")int inquirynum,
+            @RequestParam("nickname") String nickname,
+            @RequestParam("content")String content){
+        HashMap<String, Object >map = new HashMap<>();
+        as.insertAnswer(inquirynum, nickname, content);
+        return map;
+    }
+
+    @GetMapping("/getAdminAnswer")
+    public HashMap<String, Object>getAdminAnswer(
+            @RequestParam("inquiryId")int inquiryId
+    ){
+        HashMap<String, Object>map = new HashMap<>();
+
+        map.put("answers", as.getAdminAnswer(inquiryId));
+        return map;
+    }
+
 
 }
