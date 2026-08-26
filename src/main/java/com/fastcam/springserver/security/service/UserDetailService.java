@@ -26,6 +26,7 @@ public class UserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
+
         System.out.println(
                 "loadUserByUsername call - username : "
                         + username
@@ -33,38 +34,20 @@ public class UserDetailService implements UserDetailsService {
 
 
         // =================================================
-        // userid가 int이므로 String → int 변환
+        // username = 로그인 화면에서 입력한 이메일
         // =================================================
 
-        int userid;
-
-        try {
-            userid = Integer.parseInt(username);
-        } catch (NumberFormatException e) {
-            throw new UsernameNotFoundException(
-                    username + " - 잘못된 사용자 ID"
-            );
-
-        }
-
-
-        // =================================================
-        // 회원 조회
-        // =================================================
-
-        Member member = mr.findByUserid(userid);
+        Member member = mr.findByEmail(username);
 
         if (member == null) {
             throw new UsernameNotFoundException(
                     username + " - User Not Found"
             );
-
         }
 
 
         // =================================================
         // 회원 권한 조회
-        // MemberRole은 하나의 role만 사용
         // =================================================
 
         MemberRole memberRole =
@@ -77,10 +60,14 @@ public class UserDetailService implements UserDetailsService {
         if (memberRole != null
                 && memberRole.getRole() != null
                 && !memberRole.getRole().isBlank()) {
-            role = memberRole.getRole();
 
+            role = memberRole.getRole();
         }
 
+
+        // =================================================
+        // 로그인 사용자 확인
+        // =================================================
 
         System.out.println(
                 "회원 : " + member.getNickname()
@@ -111,6 +98,10 @@ public class UserDetailService implements UserDetailsService {
                 role
         );
 
+
+        // =================================================
+        // Spring Security에 사용자 정보 반환
+        // =================================================
 
         return mdto;
     }

@@ -5,6 +5,8 @@ import com.fastcam.springserver.entity.MemberRole;
 import com.fastcam.springserver.repository.MemberRepository;
 import com.fastcam.springserver.repository.MemberRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.http.HttpStatus;
@@ -20,17 +22,25 @@ public class MemberService {
     @Autowired
     MemberRoleRepository mrr;
 
+    BCryptPasswordEncoder pe = new BCryptPasswordEncoder();
+
     public void insertMember(Member member) {
+
+        // 비밀번호 BCrypt 암호화
+        member.setPwd(pe.encode(member.getPwd()));
+
+        // 회원 저장
         mr.save(member);
+
+        // 회원 정보 조회
         Member mainmember = mr.findByEmail(member.getEmail());
 
+        // 권한 저장
         MemberRole memberrole = new MemberRole();
         memberrole.setEmail(mainmember.getEmail());
         memberrole.setRole("USER");
 
         mrr.save(memberrole);
-
-
     }
 
 

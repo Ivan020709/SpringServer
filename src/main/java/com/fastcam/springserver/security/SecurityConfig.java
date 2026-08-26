@@ -1,6 +1,8 @@
 package com.fastcam.springserver.security;
 
 import com.fastcam.springserver.security.filter.JWTCheckFilter;
+import com.fastcam.springserver.security.handler.APILoginFailHandler;
+import com.fastcam.springserver.security.handler.APILoginSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -39,8 +41,10 @@ public class SecurityConfig {
         http.formLogin(
                 config -> {
                     config.loginPage("/member/login");
-                    config.successHandler( new com.fastcam.springserver.security.handler.APILoginSuccessHandler() );
-                    config.failureHandler( new com.fastcam.springserver.security.handler.APILoginFailHandler() );
+                    config.usernameParameter("userid");
+                    config.passwordParameter("pwd");
+                    config.successHandler(new APILoginSuccessHandler());
+                    config.failureHandler(new APILoginFailHandler());
                 }
         );
 
