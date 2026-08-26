@@ -11,7 +11,7 @@ import java.io.IOException;
 public class JWTCheckFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
+        filterChain.doFilter(request, response);
     }
 
     @Override
@@ -27,6 +27,8 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         if(path.startsWith("/member/getLoginUser"))
             return true;
         if(path.startsWith("/member/updateKakaoMember"))
+            return true;
+        if(path.startsWith("/favicon.ico"))
             return true;
 
         // 아이디/비밀번호 찾기

@@ -16,7 +16,6 @@ public class MemberDto extends User {
             String nickname,
             String email,
             String phone,
-            String birth,
             String savefilename,
             String zip_num,
             String address1,
@@ -49,7 +48,6 @@ public class MemberDto extends User {
         this.nickname = nickname;
         this.email = email;
         this.phone = phone;
-        this.birth = birth;
         this.savefilename = savefilename;
         this.zip_num = zip_num;
         this.address1 = address1;
@@ -68,7 +66,6 @@ public class MemberDto extends User {
     private String nickname;
     private String email;
     private String phone;
-    private String birth;
     private String savefilename;
     private String zip_num;
     private String address1;
@@ -94,7 +91,6 @@ public class MemberDto extends User {
         dataMap.put("nickname", nickname);
         dataMap.put("email", email);
         dataMap.put("phone", phone);
-        dataMap.put("birth", birth);
         dataMap.put("savefilename", savefilename);
         dataMap.put("zip_num", zip_num);
         dataMap.put("address1", address1);

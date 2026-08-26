@@ -187,7 +187,7 @@ public class MemberController {
             mdto.setNickname( ac.getProfile().getNickname() );
             mdto.setProvider("KAKAO");
 
-            ms.insertMember(mdto);
+            ms.insertKakaoMember(mdto);
             mdto = ms.getMemberBySnsid( kakaoProfile.getId() );
         }
         response.sendRedirect("http://localhost:3000/savekakaoinfo/" + mdto.getUserid());

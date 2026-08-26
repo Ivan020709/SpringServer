@@ -86,7 +86,6 @@ public class UserDetailService implements UserDetailsService {
                 member.getNickname(),
                 member.getEmail(),
                 member.getPhone(),
-                member.getBirth(),
                 member.getSavefilename(),
                 member.getZip_num(),
                 member.getAddress1(),

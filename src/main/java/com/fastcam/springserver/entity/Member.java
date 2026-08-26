@@ -19,7 +19,6 @@ public class Member {
     @Column (nullable = false)
     private String email;
     private String phone;
-    private String birth;
     @Column(length = 500)
     private String savefilename;
     private String zip_num;

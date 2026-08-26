@@ -134,4 +134,20 @@ public class MemberService {
         oldMember.setAddress2(member.getAddress2());
         oldMember.setAddress3(member.getAddress3());
     }
+
+    public void insertKakaoMember(Member mdto) {
+
+        // 카카오 회원은 비밀번호가 없으므로 암호화하지 않음
+        mr.save(mdto);
+
+        // 회원 정보 조회
+        Member mainmember = mr.findBySnsid(mdto.getSnsid());
+
+        // 권한 저장
+        MemberRole memberrole = new MemberRole();
+        memberrole.setEmail(mainmember.getEmail());
+        memberrole.setRole("USER");
+
+        mrr.save(memberrole);
+    }
 }
