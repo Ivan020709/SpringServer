@@ -131,6 +131,9 @@ public class AdminController {
             @RequestParam("content")String content){
         HashMap<String, Object >map = new HashMap<>();
         as.insertAnswer(inquirynum, nickname, content);
+        // 프론트가 임시 답변을 만들지 않도록 실제 저장된 답변과 결과를 반환합니다.
+        map.put("msg", "OK");
+        map.put("answer", as.getAdminAnswer(inquirynum));
         return map;
     }
 

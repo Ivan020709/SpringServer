@@ -201,7 +201,7 @@ public class AdminService {
     }
 
     public InquiryComment getAdminAnswer(int inquiryId) {
-        return icr.findByInquiryId(inquiryId);
+        return icr.findFirstByInquiryIdOrderByCreatedAtDesc(inquiryId);
     }
 
 }
