@@ -138,6 +138,9 @@ public class MemberService {
         oldMember.setAddress1(member.getAddress1());
         oldMember.setAddress2(member.getAddress2());
         oldMember.setAddress3(member.getAddress3());
+
+        // 새로 업로드한 프로필 사진 파일명을 회원 정보에 저장m
+        oldMember.setSavefilename(member.getSavefilename());
     }
 
     public void insertKakaoMember(Member mdto) {
