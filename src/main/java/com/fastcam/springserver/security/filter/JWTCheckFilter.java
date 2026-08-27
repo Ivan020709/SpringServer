@@ -113,6 +113,48 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         if(path.startsWith("/board/plusCount"))
             return true;
 
+        // 브라우저 CORS 사전 요청
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod()))
+            return true;
+
+        // 자유게시판 공개 조회
+        if (path.startsWith("/board/getBoardList"))
+            return true;
+
+        if (path.startsWith("/board/getBoard/"))
+            return true;
+
+        // 자유게시판 댓글 공개 조회
+        if ("GET".equalsIgnoreCase(request.getMethod())
+                && path.matches("/board/\\d+/comments"))
+            return true;
+
+        // 공지사항 공개 조회
+        if (path.startsWith("/notice/getNoticeList"))
+            return true;
+
+        if (path.startsWith("/notice/getNotice/"))
+            return true;
+
+        if (path.startsWith("/notice/plusCount"))
+            return true;
+
+        // 로그인 전에도 발생할 수 있는 프론트 오류 기록
+        if (path.startsWith("/admin/errorLog"))
+            return true;
+
+        // 문의사항 목록은 비회원도 조회 가능
+        if (path.startsWith("/inquiry/getInquiryList"))
+            return true;
+
+        // 문의사항 상세 내용은 비회원도 조회 가능
+        if (path.startsWith("/inquiry/getInquiry/"))
+            return true;
+
+        // 문의사항에 작성된 관리자 답변은 비회원도 조회 가능
+        if (path.startsWith("/admin/getAdminAnswer"))
+            return true;
+
         return false;
     }
 }

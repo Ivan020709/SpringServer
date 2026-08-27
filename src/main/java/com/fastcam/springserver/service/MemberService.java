@@ -115,8 +115,9 @@ public class MemberService {
     public Member updatePwd(String email, String password) {
         Member member = mr.findByEmail(email);
 
-        if (member != null) {
-            member.setPwd(password);
+        if (member != null && password != null && !password.isBlank()) {
+            // 새 비밀번호를 그대로 저장하지 않고 BCrypt로 암호화해서 저장합니다.
+            member.setPwd(pe.encode(password));
             mr.save(member);
         }
 
@@ -126,7 +127,11 @@ public class MemberService {
     public void updateMember(Member member) {
         Member oldMember = mr.findByEmail(member.getEmail());
 
-        oldMember.setPwd(member.getPwd());
+        // 새 비밀번호가 들어온 경우에만 변경합니다.
+        // 빈 문자열이면 DB에 저장된 기존 암호화 비밀번호를 유지합니다.
+        if (member.getPwd() != null && !member.getPwd().isBlank()) {
+            oldMember.setPwd(pe.encode(member.getPwd()));
+        }
         oldMember.setNickname(member.getNickname());
         oldMember.setPhone(member.getPhone());
         oldMember.setZip_num(member.getZip_num());

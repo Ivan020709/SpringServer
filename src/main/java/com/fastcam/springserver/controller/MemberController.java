@@ -223,21 +223,52 @@ public class MemberController {
         return map;
     }
 
+    // 카카오 로그인 회원에게도 일반 로그인과 같은 JWT를 발급한다.
+    private HashMap<String, Object> makeKakaoLoginUser(Member member) {
+        HashMap<String, Object> loginUser = new HashMap<>();
+
+        // 프론트 Redux와 쿠키에서 사용하는 회원정보
+        loginUser.put("userid", member.getUserid());
+        loginUser.put("name", member.getName());
+        loginUser.put("nickname", member.getNickname());
+        loginUser.put("email", member.getEmail());
+        loginUser.put("phone", member.getPhone());
+        loginUser.put("savefilename", member.getSavefilename());
+        loginUser.put("zip_num", member.getZip_num());
+        loginUser.put("address1", member.getAddress1());
+        loginUser.put("address2", member.getAddress2());
+        loginUser.put("address3", member.getAddress3());
+        loginUser.put("provider", member.getProvider());
+        loginUser.put("snsid", member.getSnsid());
+        loginUser.put("editcom", member.getEditcom());
+        loginUser.put("role", "USER");
+
+        // accessToken은 60분, refreshToken은 1일 동안 사용한다.
+        String accessToken = JWTUtil.generateToken(loginUser, 60);
+        String refreshToken = JWTUtil.generateToken(loginUser, 60 * 24);
+
+        loginUser.put("accessToken", accessToken);
+        loginUser.put("refreshToken", refreshToken);
+
+        return loginUser;
+    }
+
     @PostMapping("/updateKakaoMember")
     public HashMap<String,Object> updateKakaoMember(@RequestBody Member member){
         HashMap<String, Object> map = new HashMap<>();
         int userId = member.getUserid();
         ms.updateKakaoMember(member, userId);
         map.put("msg", "OK");
-        Member loginUser = ms.getMemberByUserid(userId);
-        map.put("loginUser", loginUser);
+        Member loginMember = ms.getMemberByUserid(userId);
+        map.put("loginUser", makeKakaoLoginUser(loginMember));
         return map;
     }
 
     @GetMapping("/getLoginUser")
     public HashMap<String, Object> getLoginUser(@RequestParam("userid") int userid){
         HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("loginUser", ms.getMemberByUserid(userid) );
+        Member loginMember = ms.getMemberByUserid(userid);
+        map.put("loginUser", makeKakaoLoginUser(loginMember));
         return map;
     }
 
