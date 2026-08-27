@@ -3,6 +3,8 @@ package com.fastcam.springserver.controller;
 import com.fastcam.springserver.dto.KakaoProfile;
 import com.fastcam.springserver.dto.OAuthToken;
 import com.fastcam.springserver.entity.Member;
+import com.fastcam.springserver.security.util.JWTException;
+import com.fastcam.springserver.security.util.JWTUtil;
 import com.fastcam.springserver.service.MemberService;
 import com.google.gson.Gson;
 import jakarta.servlet.ServletContext;
@@ -19,6 +21,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Map;
 
 
 @RestController
@@ -311,6 +314,54 @@ public class MemberController {
         }
 
         return map;
+    }
+
+    @GetMapping("/refresh/{refreshToken}")
+    public HashMap<String, Object> refresh(
+            @PathVariable("refreshToken") String refreshToken ,
+            @RequestHeader("Authorization") String authHeader   ) throws JWTException {
+        HashMap<String, Object> result = new HashMap<>();
+
+        if( refreshToken == null || refreshToken.equals("") )
+            throw  new JWTException("NULL_REFRESH");
+        if( authHeader == null || authHeader.length() < 7 )
+            throw new JWTException("INVALID_HEADER");
+
+        String accessToken = authHeader.substring(7);
+
+        // 기한 만료 체크
+        boolean expiredResult = true;
+        try {
+            JWTUtil.validateToken( accessToken );
+        } catch (JWTException e) {
+            if( e.getMessage().equals("Expired") ) expiredResult=false;
+        }
+
+        if( expiredResult ){  // 유효기한 만료전
+            System.out.println("토큰 유료기간 만료전... 계속 사용");
+            result.put("accessToken", accessToken);
+            result.put("refreshToken", refreshToken);
+        }else{ // 유효기한 만료 후
+            System.out.println("토큰 유료기간 만료후... 토큰 교체");
+            // 리프레시 토큰에서 claims 를 추출
+            Map<String, Object> claims = JWTUtil.validateToken(refreshToken);
+            // 추출한 claims 로 accessToken 재발급
+            String newAccessToken = JWTUtil.generateToken(claims, 1);
+
+            String newRefreshToken = "";
+            int exp = (Integer)claims.get("exp");
+            java.util.Date expDate = new java.util.Date( (long)exp * (1000 ));//밀리초로 변환
+            long gap = expDate.getTime() - System.currentTimeMillis();//현재 시간과의 차이 계산
+            long leftMin = gap / (1000 * 60); //분단위 변환
+            if(  leftMin < 60  )  // 한시간 미만으로 남았으면 토큰 교체
+                newRefreshToken = JWTUtil.generateToken(claims, 60*24);
+            else
+                newRefreshToken = refreshToken;
+
+            result.put("accessToken", newAccessToken);
+            result.put("refreshToken", newRefreshToken);
+        }
+        return result;
     }
 
 }

@@ -15,6 +15,7 @@ public class AdminError {
     private String type;
     private String level;
     private String method;
+    @Column(columnDefinition = "varchar(1000)")
     private String api;
     @Column(columnDefinition = "TEXT")
     private String msg;
