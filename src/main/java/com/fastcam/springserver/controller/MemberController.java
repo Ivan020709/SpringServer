@@ -22,6 +22,7 @@ import java.net.URL;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 @RestController
@@ -69,11 +70,17 @@ public class MemberController {
 
     }
 
+    // 이메일마다 서로 다른 인증번호를 저장합니다.
+    // 여러 사용자가 동시에 인증번호를 요청해도 서로의 번호가 덮어써지지 않습니다.
+    private final Map<String, Integer> emailCodeMap = new ConcurrentHashMap<>();
+
     @PostMapping("/emailCheck")
     public HashMap<String, Object>emailCheck(@RequestParam ("email") String email){
         HashMap<String, Object>map = new HashMap<>();
         Member mdto  = ms.getEmail(email);
         if(mdto==null){
+            int number = ms.sendMail(email);
+            emailCodeMap.put(email.trim().toLowerCase(), number);
             map.put("msg", "OK");
         }else{
             map.put("msg","notOK");
@@ -392,6 +399,27 @@ public class MemberController {
             result.put("accessToken", newAccessToken);
             result.put("refreshToken", newRefreshToken);
         }
+        return result;
+    }
+
+    @PostMapping("/conFirmCode")
+    public HashMap<String, Object> conFirmCode(
+            @RequestParam("email") String email,
+            @RequestParam("usercode") String usercode){
+        HashMap<String, Object> result = new HashMap<>();
+
+        String emailKey = email.trim().toLowerCase();
+        Integer savedCode = emailCodeMap.get(emailKey);
+
+        if(savedCode != null && String.valueOf(savedCode).equals(usercode.trim())) {
+            result.put("msg", "ok");
+
+            // 인증에 성공한 번호는 다시 사용할 수 없도록 삭제합니다.
+            emailCodeMap.remove(emailKey);
+        } else {
+            result.put("msg", "not_ok");
+        }
+
         return result;
     }
 
