@@ -10,6 +10,10 @@ public class RequestDto {
     private String session_id;
     private String character;
     private String message;
+    // Spring 서버가 회원의 친밀도를 조회하여 FastAPI에 전달합니다.
+    private int affinityLevel;
+    private String affinityName;
+    private String toneGuide;
     private List<MessageItem> history;
 
     @Data

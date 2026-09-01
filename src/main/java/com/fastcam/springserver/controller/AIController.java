@@ -4,6 +4,7 @@ import com.fastcam.springserver.dto.RequestDto;
 import com.fastcam.springserver.dto.ResponseDto;
 import com.fastcam.springserver.entity.EmotionDiary;
 import com.fastcam.springserver.service.AIService;
+import com.fastcam.springserver.service.AffinityService;
 import com.fastcam.springserver.service.EmotionDiaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +19,11 @@ import org.springframework.web.bind.annotation.*;
 public class AIController {
 
     private final AIService aiService;
+    private final AffinityService affinityService;
 
-    public AIController(AIService aiService) {
+    public AIController(AIService aiService, AffinityService affinityService) {
         this.aiService = aiService;
+        this.affinityService = affinityService;
     }
 
     @Autowired
@@ -35,6 +38,14 @@ public class AIController {
     public ResponseEntity<ResponseDto> chat(
             @RequestBody RequestDto req
     ) {
+
+        // 로그인 회원의 현재 친밀도에 맞는 말투 안내를 FastAPI에 같이 전달합니다.
+        if (req.getUserid() > 0) {
+            java.util.Map<String, Object> info = affinityService.myInfo(req.getUserid());
+            req.setAffinityLevel((Integer) info.get("level"));
+            req.setAffinityName((String) info.get("levelName"));
+            req.setToneGuide(affinityService.toneGuide(req.getUserid()));
+        }
 
         System.out.println("=================================");
         System.out.println("AI 채팅 요청");
