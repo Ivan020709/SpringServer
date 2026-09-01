@@ -90,6 +90,12 @@ public class JWTCheckFilter extends OncePerRequestFilter {
             return true;
         if(path.startsWith("/member/updatePwd"))
             return true;
+        if(path.startsWith("/sms/sendSMS")) {
+            return true;
+        }
+        if(path.startsWith("/sms/confirmNumber")) {
+            return true;
+        }
 
         // 회원가입 및 로그인
         if(path.startsWith("/member/login"))

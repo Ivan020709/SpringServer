@@ -52,13 +52,13 @@ public class MemberController {
 //        return map;
 //    }
 
-    @GetMapping("/getMember")
-    public HashMap<String, Object>getMember(@RequestParam("snsid") String snsid){
-        HashMap<String, Object> map = new HashMap<>();
-        ms.getSnsid(snsid);
-        map.put("msg","OK");
-        return map;
-    }
+//    @GetMapping("/getMember")
+//    public HashMap<String, Object>getMember(@RequestParam("snsid") String snsid){
+//        HashMap<String, Object> map = new HashMap<>();
+//        ms.getSnsid(snsid);
+//        map.put("msg","OK");
+//        return map;
+//    }
 
     @PostMapping("/insertMember")
     public HashMap<String, Object>join(@RequestBody Member member){
@@ -294,7 +294,7 @@ public class MemberController {
         if (member == null) {
             map.put("msg", "notOK");
         } else {
-            map.put("msg", "OK");
+            map.put("msg", "ok");
 
             // 프론트가 result.data.userid를 사용하고 있어서
             // userid라는 이름으로 이메일을 보내준다.
@@ -394,5 +394,9 @@ public class MemberController {
         }
         return result;
     }
+
+
+
+
 
 }

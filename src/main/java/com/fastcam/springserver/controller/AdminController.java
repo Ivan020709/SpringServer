@@ -42,10 +42,11 @@ public class AdminController {
     public HashMap<String, Object> deleteReport(
             @RequestParam("reportnum") int reportnum,
             @RequestParam("adminid") String adminid,
-            @RequestParam("adminname") String adminname
+            @RequestParam("adminname") String adminname,
+            @RequestParam("boardnum") int boardnum
     ){
         HashMap<String, Object> map = new HashMap<>();
-        as.deleteReport(reportnum, adminid, adminname);
+        as.deleteReport(reportnum, adminid, adminname, boardnum);
         map.put("msg", "OK");
         return map;
     }
