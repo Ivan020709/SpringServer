@@ -78,8 +78,10 @@ public class AdminService {
         return  result;
     }
 
-    public void deleteReport(int reportnum, String adminid, String adminname) {
+    public void deleteReport(int reportnum, String adminid, String adminname, int boardnum) {
         AdminReport areport = ar.findByReportnum(reportnum);
+        Board board = br.findByBoardnum(boardnum);
+        br.delete(board);
         ar.delete(areport);
 
         AdminActivityLog log = new AdminActivityLog();
@@ -89,7 +91,7 @@ public class AdminService {
         log.setActivity("게시글 삭제");
         log.setTarget("게시글 #" + reportnum);
         log.setMethod("DELETE");
-        log.setApi("/api/admin/deleteReport");
+        log.setApi("/api/board/deleteBoard");
         log.setResult("SUCCESS");
 
         aalr.save(log);
