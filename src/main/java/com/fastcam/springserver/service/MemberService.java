@@ -4,7 +4,12 @@ import com.fastcam.springserver.entity.Member;
 import com.fastcam.springserver.entity.MemberRole;
 import com.fastcam.springserver.repository.MemberRepository;
 import com.fastcam.springserver.repository.MemberRoleRepository;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class MemberService {
 
     @Autowired
@@ -157,5 +163,37 @@ public class MemberService {
         memberrole.setRole("USER");
 
         mrr.save(memberrole);
+    }
+
+    // 이메일 전송객체
+    private final JavaMailSender JMSender;
+
+    // 이메일 전송주체
+    @Value("${spring.mail.username}")
+    private String senderEmail;
+
+    public int sendMail(String email) {
+
+        // 메일 한 건마다 별도의 인증번호를 생성합니다.
+        int number = (int)(Math.random() * (90000)) + 100000;
+
+        // 수신 이메일, 제목 내용 등등을 설정할 객체를 생성
+        // 전송될 이메일 내용(수신자, 제목, 내용 등) 구성 객체
+        MimeMessage message = JMSender.createMimeMessage();
+
+        try {
+            message.setFrom( senderEmail );  // 보내는 사람 설정
+            message.setRecipients( MimeMessage.RecipientType.TO, email );  // 받는 사람 설정
+            message.setSubject("이메일 인증");  // 제목 설정
+            String body = "";
+            body += "<h3>" + "요청하신 인증 번호입니다." + "</h3>";
+            body += "<h1>" + number + "</h1>";
+            body += "<h3>" + "감사합니다." + "</h3>";
+            message.setText(body, "UTF-8", "html");  // 본문 설정
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+        JMSender.send(message);  // 구성 완료된 message 를 JMSender 로 전송
+        return number;
     }
 }

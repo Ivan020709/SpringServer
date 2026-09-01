@@ -155,6 +155,9 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         if (path.startsWith("/admin/getAdminAnswer"))
             return true;
 
+        if (path.startsWith("/member/conFirmCode"))
+            return true;
+
         return false;
     }
 }
