@@ -4,7 +4,12 @@ import com.fastcam.springserver.entity.Member;
 import com.fastcam.springserver.entity.MemberRole;
 import com.fastcam.springserver.repository.MemberRepository;
 import com.fastcam.springserver.repository.MemberRoleRepository;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class MemberService {
 
     @Autowired
