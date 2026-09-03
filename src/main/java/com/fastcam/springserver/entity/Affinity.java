@@ -6,9 +6,10 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
 
-/** 회원별 AI 친밀도 경험치와 레벨입니다. */
+/** 회원과 AI 캐릭터별 친밀도 경험치와 레벨입니다. */
 @Entity
-@Table(name = "affinity", uniqueConstraints = @UniqueConstraint(columnNames = "user_id"))
+@Table(name = "affinity", uniqueConstraints =
+        @UniqueConstraint(columnNames = {"user_id", "character_name"}))
 @Data
 public class Affinity {
     @Id
@@ -19,8 +20,12 @@ public class Affinity {
     @Column(name = "user_id", nullable = false)
     private int userId;
 
+    // 필, 그, 로 중 어떤 AI의 친밀도인지 구분합니다.
+    @Column(name = "character_name", nullable = false, length = 30)
+    private String characterName;
+
     @Column(name = "affinity_exp", nullable = false)
-    private int affinityExp;
+    private long affinityExp;
 
     @Column(name = "affinity_level", nullable = false)
     private int affinityLevel = 1;

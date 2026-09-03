@@ -3,6 +3,7 @@ import lombok.Data;
 @Data
 public class PaymentCompleteRequest {
     private int userId;
-    private String merchantUid;
-    private String paymentUid;
+    private String orderId;
+    private String paymentKey;
+    private int amount;
 }

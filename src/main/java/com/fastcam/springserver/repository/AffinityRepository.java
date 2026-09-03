@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface AffinityRepository extends JpaRepository<Affinity, Integer> {
-    Optional<Affinity> findByUserId(int userId);
+    Optional<Affinity> findByUserIdAndCharacterName(int userId, String characterName);
 }

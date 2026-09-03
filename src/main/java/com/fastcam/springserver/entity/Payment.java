@@ -22,8 +22,9 @@ public class Payment {
     @Column(name = "merchant_uid", nullable = false, length = 100)
     private String merchantUid;
 
-    @Column(name = "payment_uid", length = 200)
-    private String paymentUid;
+    // 토스페이먼츠가 발급한 결제 식별키입니다.
+    @Column(name = "payment_key", length = 200)
+    private String paymentKey;
 
     @Column(name = "total_price", nullable = false)
     private int totalPrice;

@@ -7,7 +7,17 @@ import java.util.*;
 public class AffinityController {
     private final AffinityService service;
     public AffinityController(AffinityService service){this.service=service;}
-    @GetMapping("/myInfo") public Map<String,Object> myInfo(@RequestParam int userId){return service.myInfo(userId);}
-    @PostMapping("/useItem") public Map<String,Object> useItem(@RequestBody ItemUseRequest request){return service.useItem(request.getUserId(),request.getItemId());}
-    @GetMapping("/ranking") public Map<String,Object> ranking(){List<Map<String,Object>> rows=service.ranking();return Map.of("ranking",rows,"count",rows.size());}
+    @GetMapping("/myInfo")
+    public Map<String,Object> myInfo(@RequestParam int userId, @RequestParam String character){
+        return service.myInfo(userId, character);
+    }
+    @PostMapping("/useItem")
+    public Map<String,Object> useItem(@RequestBody ItemUseRequest request){
+        return service.useItem(request.getUserId(), request.getItemId(), request.getCharacter());
+    }
+    @GetMapping("/ranking")
+    public Map<String,Object> ranking(@RequestParam String character){
+        List<Map<String,Object>> rows=service.ranking(character);
+        return Map.of("character", character, "ranking", rows, "count", rows.size());
+    }
 }
